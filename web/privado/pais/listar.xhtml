@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Manutencção CRUD de Pais</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:messages/>
+            <h:commandButton value="Novo" action="#{controlePais.novo()}"/>
+            <h:dataTable value="#{controlePais.dao.lista}" var="obj">
+                <f:facet name="header">
+                    <h:outputText value="Listagem de Paises"/>
+                </f:facet>
+                <f:facet name="footer">
+                    <h:outputText value="Total de registros: #{controlePais.dao.lista.size()}"/>
+                </f:facet>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="ID"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.id}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nome"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.nome}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="ISO"/>
+                    </f:facet>
+                    <h:outputText value="#{obj.iso}"/>
+                </h:column>
+                <h:column>
+                    <h:commandLink value="Alterar"
+                                   action="#{controlePais.editar(obj.id)}"/>      
+                </h:column>
+                <h:column>
+                    <h:commandLink value="Excluir"
+                                   action="#{controlePais.remover(obj.id)}"
+                                   onclick="if (!confirm('Confirma a exclusão?')) return false"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+</html>
+
