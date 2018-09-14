@@ -38,7 +38,7 @@ public class PaisDAO implements Serializable{
                 em.merge(obj);
             }
             em.getTransaction().commit();
-            mensagem = "Objeto persistio com sucesso!";
+            mensagem = "Objeto persistido com sucesso!";
             return true;
         } catch (Exception e) {
             if(em.getTransaction().isActive() == false){

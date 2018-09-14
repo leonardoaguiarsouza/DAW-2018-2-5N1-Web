@@ -2,12 +2,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Manutencção CRUD de Pais</title>
-    </h:head>
-    <h:body>
-        <h:form>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">
+            Manutencção CRUD de Pais
+        </ui:define>
+        <ui:define name="conteudo">
+            <h:form>
             <h:messages/>
             <h:commandButton value="Novo" action="#{controlePais.novo()}"/>
             <h:dataTable value="#{controlePais.dao.lista}" var="obj">
@@ -46,6 +48,7 @@
                 </h:column>
             </h:dataTable>
         </h:form>
-    </h:body>
+        </ui:define>
+    </ui:composition>
 </html>
 
