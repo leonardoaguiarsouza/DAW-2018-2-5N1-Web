@@ -6,6 +6,7 @@
 package br.edu.ifsul.controle;
 
 import br.edu.ifsul.dao.EstadoDAO;
+import br.edu.ifsul.dao.DAOGenerico;
 import br.edu.ifsul.dao.PaisDAO;
 import br.edu.ifsul.modelo.Estado;
 import br.edu.ifsul.util.Util;
@@ -20,12 +21,12 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "controleEstado")
 @SessionScoped
 public class ControleEstado implements Serializable{
-    private EstadoDAO dao;
+    private EstadoDAO<Estado> dao;
     private Estado objeto;
     private PaisDAO daoPais;
 
     public ControleEstado() {
-        dao = new EstadoDAO();
+        dao = new EstadoDAO<>();
         daoPais = new PaisDAO();
     }
 
@@ -39,7 +40,13 @@ public class ControleEstado implements Serializable{
     }
     
     public String salvar(){
-        if(dao.salvar(objeto)){
+        boolean persistiu;
+        if(objeto.getId() == null){
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if(persistiu){
             Util.mensagemInformacao(dao.getMensagem());
             return "listar?faces-redirect=true";
         } else {

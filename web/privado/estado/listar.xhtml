@@ -11,7 +11,7 @@
             <p:messages/>
             <h:form>
                 <p:commandButton value="Novo" action="#{controleEstado.novo()}" ajax="false" icon="ui-icon-plus"/>
-                <p:dataTable value="#{controleEstado.dao.lista}" var="obj">
+                <p:dataTable value="#{controleEstado.dao.listaObjetos}" var="obj">
                     <p:column headerText="ID">
                         <p:outputLabel value="#{obj.id}"/>
                     </p:column>
