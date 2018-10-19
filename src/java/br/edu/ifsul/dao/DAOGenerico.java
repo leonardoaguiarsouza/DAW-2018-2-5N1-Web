@@ -20,6 +20,11 @@ public class DAOGenerico<TIPO> {
     private EntityManager em;
     Class classePersistente;
     private String mensagem;
+    protected String ordem = "id";
+    protected String filtro = "";
+    private Integer maximoobjetos = 0;
+    private Integer posicaoAtual = 0;
+    private Integer totalObjetos = 0;
 
     public DAOGenerico() {
         em = EntityManagerUtil.getEntityManager();
@@ -75,9 +80,61 @@ public class DAOGenerico<TIPO> {
      */
     public List<TIPO> getListaObjetos() {
         String jpql = " from " + classePersistente.getSimpleName();
-        return em.createQuery(jpql).getResultList();
+        String where = "";
+        // filtrar a entrada p/ proteger de sql injection
+        filtro = filtro.replaceAll("[';-]", "");
+        if (filtro.length() > 0){
+            if (ordem.equals("id")){
+                try {
+                    Integer.parseInt(filtro);
+                    where += " where " + ordem + " = '" + filtro + "' ";
+                } catch (Exception e) {
+                    
+                }
+            } else {
+                where += " where upper(" + ordem + ") like '" + filtro.toUpperCase() + "%' ";
+            }
+        }
+        jpql += where;
+        jpql += " order by " + ordem;
+        totalObjetos = em.createQuery(jpql).getResultList().size();
+        return em.createQuery(jpql).setFirstResult(posicaoAtual).setMaxResults(maximoobjetos).getResultList();
     }
 
+    public void primeiro(){
+        posicaoAtual = 0;
+    }
+    
+    public void anterior(){
+        posicaoAtual -= maximoobjetos;
+        if(posicaoAtual < 0){
+            posicaoAtual = 0;
+        }
+    }
+    
+    public void proximo(){
+        if(posicaoAtual + maximoobjetos < totalObjetos){
+            posicaoAtual += maximoobjetos;
+        }
+    }
+    
+    public void ultimo(){
+        int resto = totalObjetos % maximoobjetos;
+        if(resto > 0){
+            posicaoAtual = totalObjetos - resto;
+        } else {
+            posicaoAtual = totalObjetos - maximoobjetos;
+        }
+    }
+    
+    public String getMensagemNavegacao(){
+        int ate = posicaoAtual + maximoobjetos;
+        if(ate < totalObjetos){
+            ate = totalObjetos;
+        }
+        return "Listando de " + (posicaoAtual + 1) + " até " + ate + " de " + totalObjetos + " registros";
+    }
+    
     /**
      * @return the listaTodos
      */
@@ -148,6 +205,76 @@ public class DAOGenerico<TIPO> {
      */
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
+    }
+
+    /**
+     * @return the ordem
+     */
+    public String getOrdem() {
+        return ordem;
+    }
+
+    /**
+     * @param ordem the ordem to set
+     */
+    public void setOrdem(String ordem) {
+        this.ordem = ordem;
+    }
+
+    /**
+     * @return the filtro
+     */
+    public String getFiltro() {
+        return filtro;
+    }
+
+    /**
+     * @param filtro the filtro to set
+     */
+    public void setFiltro(String filtro) {
+        this.filtro = filtro;
+    }
+
+    /**
+     * @return the maximoobjetos
+     */
+    public Integer getMaximoobjetos() {
+        return maximoobjetos;
+    }
+
+    /**
+     * @param maximoobjetos the maximoobjetos to set
+     */
+    public void setMaximoobjetos(Integer maximoobjetos) {
+        this.maximoobjetos = maximoobjetos;
+    }
+
+    /**
+     * @return the posicaoAtual
+     */
+    public Integer getPosicaoAtual() {
+        return posicaoAtual;
+    }
+
+    /**
+     * @param posicaoAtual the posicaoAtual to set
+     */
+    public void setPosicaoAtual(Integer posicaoAtual) {
+        this.posicaoAtual = posicaoAtual;
+    }
+
+    /**
+     * @return the totalObjetos
+     */
+    public Integer getTotalObjetos() {
+        return totalObjetos;
+    }
+
+    /**
+     * @param totalObjetos the totalObjetos to set
+     */
+    public void setTotalObjetos(Integer totalObjetos) {
+        this.totalObjetos = totalObjetos;
     }
     
     
